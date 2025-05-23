@@ -1,32 +1,36 @@
-# Beyond Time and Space: Multi-Modal Graph-Transformer Framework for Traffic Accident Prediction
+# ALCo-FM: Adaptive Long-Context Foundation Model for Accident Prediction
 
-A research paper and accompanying codebase presenting BTS—a unified multi-modal framework that integrates numerical, spatial, temporal, weather, and demographic data for accurate traffic accident risk prediction. The approach leverages transformer-based encoders, Vision Transformers (ViT), and Graph Neural Networks (GNN) to capture both local and global accident risk patterns.
+A research paper and accompanying codebase presenting **ALCo-FM**—the first foundation-model–based framework that (i) adaptively selects temporal context based on uncertainty, (ii) fuses numerical, spatial, and visual inputs, and (iii) produces calibrated, interpretable accident risk forecasts.
 
 ---
 
 ## Overview
 
-Beyond Time and Space (BTS) introduces a novel multi-modal Graph-Transformer framework that:
-- **Integrates Heterogeneous Data**: Combines numerical time-series data, map-based visual representations, and spatio-temporal dependencies.
-- **Adaptive Multi-Modal Fusion**: Utilizes transformer-based encoders for numerical features, ViT for spatial map images, and GNNs to model relationships across H3-based area nodes.
-- **State-of-the-Art Performance**: Outperforms existing methods on key accident prediction metrics such as Accuracy, F1 Score, Precision, and Recall.
-- **Interpretable Risk Mapping**: Outputs risk assessment maps that highlight safe (green) and high-risk (red) areas.
-
-![Figure 1](images/fig1.png)   
-*Figure 1: Overview of the proposed BTS framework. The model integrates numerical, spatial, temporal, weather, and demographic features using transformer-based encoders and a Vision Transformer (ViT) for spatial representation. A Graph Neural Network (GNN) captures spatio-temporal dependencies across H3-based area nodes, with a Multi-Layer Perceptron (MLP) head performing final accident risk classification. The framework outputs a risk assessment map, highlighting safe (green) and high-risk (red) areas.*
-
-![Figure 2](images/fig2.png)  
-*Figure 2: Comparison of state-of-the-art methods on accident-risk prediction across Accuracy, F1 Score, Precision, and Recall.*
+Adaptive Long-Context Foundation Model (ALCo-FM) introduces:
+- **Adaptive Temporal Context Selection**: Dynamically chooses history window \(w\in\{1,3,6\}\) hours based on a pre-score uncertainty \(u\) from a single-pass foundation embedding :contentReference[oaicite:0]{index=0}.
+- **Uncertainty-Aware Fusion**: Uses Monte Carlo dropout for calibrated risk estimates and to weight numerical, visual, and spatial modalities :contentReference[oaicite:1]{index=1}.
+- **Pretraining & Minimal-Data Fine-Tuning**: Pretrained on 15 U.S. cities, then fine-tuned with minimal data on 3 unseen cities, achieving robust generalization :contentReference[oaicite:2]{index=2}.
+- **State-of-the-Art Performance**: Yields 0.93 accuracy and 0.91 F1, outperforming 20+ strong baselines in large-scale urban risk forecasts :contentReference[oaicite:3]{index=3}.
+- **Interpretable Risk Maps**: Outputs spatial risk assessments highlighting low-risk (green) and high-risk (red) areas.
 
 ---
 
 ## Key Contributions
 
-1. **Multi-Modal Data Integration**: Seamlessly fuses numerical, visual, and spatial data for comprehensive accident risk assessment.
-2. **Innovative Architecture**: Combines transformer-based encoders, Vision Transformers (ViT), and Graph Neural Networks (GNN) to capture local and global patterns.
-3. **Adaptive Fusion Mechanism**: Dynamically balances contributions from each modality via an adaptive attention mechanism.
-4. **Robust Performance**: Demonstrates superior accuracy and generalization across diverse urban environments.
-5. **Interpretable Outputs**: Generates risk assessment maps to aid urban planners and policymakers in traffic safety interventions.
+1. **Adaptive Long-Context Mechanism**  
+   Uncertainty-driven selection of temporal history for efficient forecasting.
+
+2. **Foundation-Model Fusion**  
+   Leverages a pre-trained transformer to embed and fuse heterogeneous inputs.
+
+3. **Calibration via Monte Carlo Dropout**  
+   Provides well-calibrated uncertainty estimates for safer decision-making.
+
+4. **Transferable Pretraining**  
+   Demonstrates minimal-data fine-tuning on unseen cities to reduce data requirements.
+
+5. **Practical Interpretability**  
+   Generates intuitive risk maps for targetted urban safety interventions.
 
 ---
 
@@ -34,11 +38,9 @@ Beyond Time and Space (BTS) introduces a novel multi-modal Graph-Transformer fra
 
 ### Dependencies
 
-Install the required dependencies to reproduce the experiments:
+```bash
+pip install -r requirements.txt
 
-- **Core Dependencies**:
-  ```bash
-  pip install -r requirements.txt
 
 
 
@@ -52,15 +54,21 @@ Create a `config.json` file in the root directory to set paths and hyperparamete
 
 ```json
 {
-  "dataset_path": "path/to/dataset",
-  "model": "BTS",
+  "dataset_path": "Datasets/traffic_accident_data/",
+  "model": "ALCo-FM",
   "training": {
     "epochs": 40,
     "batch_size": 8192,
-    "learning_rate": 0.00005
+    "learning_rate": 5e-5
   },
-  "api_key": "your_api_key_here"
+  "thresholds": {
+    "tau_low": 0.2,
+    "tau_high": 0.8
+  },
+  "save_dir": "results/",
+  "seed": 42
 }
+
 ```
 
 Replace `"your_api_key_here"` and `"path/to/dataset"` with your actual token and dataset path.
@@ -71,21 +79,13 @@ Replace `"your_api_key_here"` and `"path/to/dataset"` with your actual token and
 
 ```plaintext
 BTS/
-├── code/
+├── codes/
 │   ├── preprocessing_1.ipynb   # Data Preprocessing
 │   ├── preprocessing_2.ipynb   # Data Preprocessing
 │   ├── train.py                # Script to train the BTS model
 │   ├── evaluate.py             # Script to evaluate model performance
 │   ├── fine_tune.py            # Script for domain-adaptive fine-tuning on new cities
-├── Datasets/                   # Scripts and utilities for data preprocessing and loading
-├── images/                     # Figures and tables used in the paper
-│   ├── fig1.png                # Overview of the proposed BTS framework
-│   ├── fig2.png                # Comparison of state-of-the-art methods on accident-risk prediction
-│   ├── tab1.png                # Evaluation of Transformer Models on Numerical Data
-│   ├── tab2.png                # Evaluating Model’s Prediction After Incorporating Vision Transformers
-│   ├── tab3.png                # Evaluating model’s prediction after integrating GNN
-│   ├── tab4.png                # Evaluation Metrics Across Selected Cities Used for Training Data Collection in Accident Prediction
-│   └── tab5.png                # Evaluation Metrics for Fine-Tuned Cities
+├── Dataset/                    # Scripts and utilities for data preprocessing and loading
 ├── requirements.txt            # Primary dependencies
 ├── requirements-extended.txt   # Extended dependencies for additional experiments
 ├── config.json                 # Configuration file for experiments
@@ -107,7 +107,7 @@ jupyter notebook code/preprocessing_2.ipynb
 
 ### Training
 
-To train the BTS model, run:
+To train the ALCo-FM model, run:
 
 ```bash
 python code/train.py --config config.json
@@ -139,6 +139,7 @@ The framework is evaluated using the following metrics:
 - **F1 Score**: Harmonic mean of precision and recall.
 - **Precision**: Ratio of true positives to all predicted positives.
 - **Recall**: Ratio of true positives to all actual positives.
+- **ECE** (Expected Calibration Error): Measures predictive calibration.
 
 ---
 
@@ -146,11 +147,11 @@ The framework is evaluated using the following metrics:
 
 ### Performance Tables
 
-- **Table 1**: Evaluation of Transformer Models on Numerical Data  
-- **Table 2**: Evaluating Model’s Prediction After Incorporating Vision Transformers  
-- **Table 3**: Evaluating model’s prediction after integrating GNN  
-- **Table 4**: Evaluation Metrics Across Selected Cities Used for Training Data Collection in Accident Prediction  
-- **Table 5**: Evaluation Metrics for Fine-Tuned Cities  
+- **Table 1**: Ablation on Temporal Window Selection
+- **Table 2**: Calibration Metrics (ECE, NLL)
+- **Table 3**: SOTA Comparison on Training Cities
+- **Table 4**: City-Wise Performance Metrics
+- **Table 5**: Fine-Tuning Results on Unseen Cities
 
 ---
 
@@ -158,18 +159,19 @@ The framework is evaluated using the following metrics:
 
 ### Limitations
 
-- **Scalability**: Increased computational costs for extremely large datasets.
-- **Data Quality**: Model performance may vary with noisy or sparse input data.
-- **Generalization**: Further improvements are needed to enhance adaptability in highly diverse urban scenarios.
+- **Discrete Window Sizes**: Fixed 1 / 3 / 6 h bins may not capture all temporal dynamics.  
+- **Calibration Overhead**: Monte Carlo dropout increases inference latency.  
+- **Data Distribution Shift**: Performance can degrade under abrupt regime changes.  
 
 ### Future Work
 
-- **Adaptive Spatial Indexing**: Refining spatial segmentation beyond fixed H3 grid sizes.
-- **Integration of Additional Modalities**: Incorporating LiDAR, telematics, and mobile sensor data.
-- **Model Optimization**: Exploring distributed training, model distillation, and pruning for real-time deployment.
-- **Extended Benchmarks**: Testing on broader datasets to validate robustness across different regions.
+- **Continuous Context Learning**: Train model to select arbitrary window lengths.  
+- **Efficient Uncertainty Estimation**: Explore lightweight calibration methods.  
+- **Additional Modalities**: Incorporate telematics, LiDAR, and mobile sensor data.  
+- **Adaptive Thresholding**: Learn τ_low and τ_high per region or scenario.  
+
 
 ---
 
-This repository includes the code, experiments, and supplementary materials for the **BTS** framework. For further details, please refer to the paper or contact the authors.
+This repository includes the code, experiments, and supplementary materials for the **ALCo-FM** framework. For further details, please refer to the paper or contact the authors.
 
