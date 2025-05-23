@@ -7,10 +7,10 @@ A research paper and accompanying codebase presenting **ALCo-FM**—the first fo
 ## Overview
 
 Adaptive Long-Context Foundation Model (ALCo-FM) introduces:
-- **Adaptive Temporal Context Selection**: Dynamically chooses history window \(w\in\{1,3,6\}\) hours based on a pre-score uncertainty \(u\) from a single-pass foundation embedding :contentReference[oaicite:0]{index=0}.
-- **Uncertainty-Aware Fusion**: Uses Monte Carlo dropout for calibrated risk estimates and to weight numerical, visual, and spatial modalities :contentReference[oaicite:1]{index=1}.
-- **Pretraining & Minimal-Data Fine-Tuning**: Pretrained on 15 U.S. cities, then fine-tuned with minimal data on 3 unseen cities, achieving robust generalization :contentReference[oaicite:2]{index=2}.
-- **State-of-the-Art Performance**: Yields 0.93 accuracy and 0.91 F1, outperforming 20+ strong baselines in large-scale urban risk forecasts :contentReference[oaicite:3]{index=3}.
+- **Adaptive Temporal Context Selection**: Dynamically chooses history window \(w\in\{1,3,6\}\) hours based on a pre-score uncertainty \(u\) from a single-pass foundation embedding.
+- **Uncertainty-Aware Fusion**: Uses Monte Carlo dropout for calibrated risk estimates and to weight numerical, visual, and spatial modalities.
+- **Pretraining & Minimal-Data Fine-Tuning**: Pretrained on 15 U.S. cities, then fine-tuned with minimal data on 3 unseen cities, achieving robust generalization.
+- **State-of-the-Art Performance**: Yields 0.93 accuracy and 0.91 F1, outperforming 20+ strong baselines in large-scale urban risk forecasts.
 - **Interpretable Risk Maps**: Outputs spatial risk assessments highlighting low-risk (green) and high-risk (red) areas.
 
 ---
