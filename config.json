@@ -1,0 +1,18 @@
+{
+  "dataset_path": "path/to/dataset",
+  "model": "BTS",
+  "training": {
+    "epochs": 40,
+    "batch_size": 8192,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "hyperparameters": {
+    "num_input_features": 21,
+    "image_embed_dim": 256,
+    "gnn_embed_dim": 128,
+    "hidden_dim": 512,
+    "num_classes": 5
+  },
+  "api_key": "your_api_key_here"
+}
